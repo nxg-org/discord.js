@@ -13,6 +13,13 @@
   </p>
 </div>
 
+# package.json
+```sh
+npm install git+https://github.com/nxg-org/discord.js
+# or
+yarn add git+https://github.com/nxg-org/discord.js
+```
+
 ## About
 
 discord.js is a powerful [Node.js](https://nodejs.org) module that allows you to easily interact with the
