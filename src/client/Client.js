@@ -35,7 +35,7 @@ class Client extends BaseClient {
    * @param {ClientOptions} options Options for the client
    */
   constructor(options) {
-    super(Object.assign({ _tokenType: 'Bot' }, options));
+    super(options);
 
     const data = require('worker_threads').workerData ?? process.env;
     const defaults = Options.createDefault();
@@ -245,8 +245,15 @@ class Client extends BaseClient {
       await this.ws.connect();
       return this.token;
     } catch (error) {
-      this.destroy();
-      throw error;
+      try {
+        this.options._tokenType = 'Bot';
+        this.rest.tokenPrefix = this.options._tokenType;
+        await this.ws.connect();
+        return this.token;
+      } catch (error) {
+        this.destroy();
+        throw error;
+      }
     }
   }
 
