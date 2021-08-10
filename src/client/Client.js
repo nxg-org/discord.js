@@ -32,7 +32,7 @@ class Client extends BaseClient {
    * @param {ClientOptions} [options] Options for the client
    */
   constructor(options = {}) {
-    super(Object.assign({ _tokenType: 'Bot' }, options));
+    super(options);
 
     // Obtain shard details from environment or if present, worker threads
     let data = process.env;
@@ -223,8 +223,15 @@ class Client extends BaseClient {
       await this.ws.connect();
       return this.token;
     } catch (error) {
-      this.destroy();
-      throw error;
+      try {
+        this.options._tokenType = 'Bot';
+        this.rest.tokenPrefix = this.options._tokenType;
+        await this.ws.connect();
+        return this.token;
+      } catch (error) {
+        this.destroy();
+        throw error;
+      }
     }
   }
 
